@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.utils.text import slugify
 from django.urls import reverse
+
+
 # Create your models here.
 
 
@@ -41,7 +43,7 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def get_absolute_url(self):
         return reverse("product", args=[self.slug])
 
@@ -73,20 +75,19 @@ class Profile(models.Model):
     state = models.CharField(max_length=200, blank=True)
     zipcode = models.CharField(max_length=200, blank=True)
     country = models.CharField(max_length=200, blank=True)
+    old_cart = models.CharField(max_length=200, blank=True, null=True)
+
 
     def __str__(self):
         return self.user.username
 
 
-
 # Create a user Profile by default when user signs up
 def create_profile(sender, instance, created, **kwargs):
-	if created:
-		user_profile = Profile(user=instance)
-		user_profile.save()
+    if created:
+        user_profile = Profile(user=instance)
+        user_profile.save()
+
 
 # Automate the profile thing
 post_save.connect(create_profile, sender=User)
-
-
-
